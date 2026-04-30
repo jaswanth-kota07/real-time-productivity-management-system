@@ -4,6 +4,7 @@ import { fetchTasks, createTask, updateTask, deleteTask } from '../store/slices/
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, CheckCircle2, Clock, Calendar, Filter, Tag } from 'lucide-react';
 import TaskCard from '../components/TaskCard';
+import StatsDashboard from '../components/StatsDashboard';
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -15,6 +16,24 @@ const Dashboard = () => {
         description: '',
         category: 'Work',
         deadline: '',
+    });
+
+    const calculatePriority = (task) => {
+        if (task.status === 'Completed') return -1;
+        const now = new Date();
+        const deadline = new Date(task.deadline);
+        const diff = deadline - now;
+        const hours = diff / (1000 * 60 * 60);
+        
+        if (diff < 0) return 1000000 + Math.abs(hours); // Overdue
+        return 100000 - hours; // Approaches deadline
+    };
+
+    const sortedTasks = [...items].sort((a, b) => {
+        const priorityA = calculatePriority(a);
+        const priorityB = calculatePriority(b);
+        if (priorityA !== priorityB) return priorityB - priorityA;
+        return new Date(a.createdAt) - new Date(b.createdAt); // Tie-breaker: earlier first
     });
 
     useEffect(() => {
@@ -41,9 +60,11 @@ const Dashboard = () => {
                 </button>
             </header>
 
+            <StatsDashboard />
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
                 <AnimatePresence>
-                    {items.map((task) => (
+                    {sortedTasks.map((task) => (
                         <TaskCard key={task._id} task={task} />
                     ))}
                 </AnimatePresence>

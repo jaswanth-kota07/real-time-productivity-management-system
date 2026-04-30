@@ -44,7 +44,20 @@ const taskSlice = createSlice({
         loading: false,
         error: null,
     },
-    reducers: {},
+    reducers: {
+        taskCreated: (state, action) => {
+            if (!state.items.find(t => t._id === action.payload._id)) {
+                state.items.push(action.payload);
+            }
+        },
+        taskUpdated: (state, action) => {
+            const index = state.items.findIndex(task => task._id === action.payload._id);
+            if (index !== -1) state.items[index] = action.payload;
+        },
+        taskDeleted: (state, action) => {
+            state.items = state.items.filter(task => task._id !== action.payload);
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchTasks.pending, (state) => { state.loading = true; })
@@ -61,4 +74,5 @@ const taskSlice = createSlice({
     },
 });
 
+export const { taskCreated, taskUpdated, taskDeleted } = taskSlice.actions;
 export default taskSlice.reducer;

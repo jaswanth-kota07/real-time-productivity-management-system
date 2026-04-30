@@ -16,19 +16,19 @@ const Navbar = () => {
 
     return (
         <nav style={{ 
-            padding: '1.5rem 2rem', 
+            padding: '1rem 2rem', 
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'center',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-            background: 'rgba(15, 23, 42, 0.8)',
-            backdropFilter: 'blur(10px)',
+            borderBottom: '1px solid var(--border-color)',
+            background: '#ffffff',
+            boxShadow: 'var(--shadow-sm)',
             position: 'sticky',
             top: 0,
             zIndex: 100
         }}>
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'white', fontWeight: '800', fontSize: '1.4rem' }}>
-                <CheckCircle color="#6366f1" size={28} />
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-main)', fontWeight: '800', fontSize: '1.4rem' }}>
+                <CheckCircle color="var(--primary)" size={28} />
                 Agumentix
             </Link>
 

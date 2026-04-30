@@ -19,6 +19,10 @@ exports.createTask = async (req, res) => {
     try {
         req.body.user = req.user.id;
         const task = await Task.create(req.body);
+        
+        // Emit socket event
+        req.io.emit('task_created', task);
+        
         res.status(201).json({ success: true, data: task });
     } catch (err) {
         res.status(400).json({ success: false, message: err.message });
@@ -46,6 +50,9 @@ exports.updateTask = async (req, res) => {
             runValidators: true
         });
 
+        // Emit socket event
+        req.io.emit('task_updated', task);
+
         res.status(200).json({ success: true, data: task });
     } catch (err) {
         res.status(400).json({ success: false, message: err.message });
@@ -69,6 +76,9 @@ exports.deleteTask = async (req, res) => {
         }
 
         await task.deleteOne();
+
+        // Emit socket event
+        req.io.emit('task_deleted', req.params.id);
 
         res.status(200).json({ success: true, data: {} });
     } catch (err) {
