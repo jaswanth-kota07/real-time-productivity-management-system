@@ -8,7 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
 
-const socket = io('http://localhost:5000');
+const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000');
 
 const PrivateRoute = ({ children }) => {
     const { token } = useSelector((state) => state.auth);
