@@ -63,7 +63,11 @@ const taskSlice = createSlice({
             .addCase(fetchTasks.pending, (state) => { state.loading = true; })
             .addCase(fetchTasks.fulfilled, (state, action) => { state.loading = false; state.items = action.payload; })
             .addCase(fetchTasks.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
-            .addCase(createTask.fulfilled, (state, action) => { state.items.push(action.payload); })
+            .addCase(createTask.fulfilled, (state, action) => { 
+                if (!state.items.find(t => t._id === action.payload._id)) {
+                    state.items.push(action.payload);
+                }
+            })
             .addCase(updateTask.fulfilled, (state, action) => {
                 const index = state.items.findIndex(task => task._id === action.payload._id);
                 if (index !== -1) state.items[index] = action.payload;
